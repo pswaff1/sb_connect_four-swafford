@@ -21,6 +21,9 @@ export default class Board {
     makeHtmlBoard() {
         const board = document.getElementById("board");
 
+        // clear the board
+        board.innerHTML = "";
+        
         // make main part of board
         for (let y = 0; y < this.height; y++) {
             const row = document.createElement("tr");

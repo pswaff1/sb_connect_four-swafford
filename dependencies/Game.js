@@ -1,21 +1,28 @@
 import Board from './Board.js';
+import Player from './Player.js';
 
 export default class Game {
     
-    constructor(width = 7, height = 6) {
+    constructor({width = 6, height = 7, player1color = '#ff0000', player2color='#0000ff'} = params) {
         this.width = width;
         this.height = height;
-        this.board = new Board(width, height);
+        this.p1 = new Player(player1color);
+        console.log(this.p1.color);
+        this.p2 = new Player(player2color);        
+        this.currPlayer = this.p1;
+        this.board = new Board(this.width, this.height);
         this.attachListeners();
-        this.currPlayer = 1;
         this.isOver = false;
-        this.isStarted = false;
-    }    
+    }
 
     attachListeners() {
         for (let row of this.board.cells.rows) {
             for (let cell of row.cells) {
                 cell.addEventListener("click", (evt) => {
+                    if (this.isOver) {
+                        return;
+                    }
+
                     // get x from ID of clicked cell
                     const x = evt.target.id.split('-')[0];
 
@@ -42,7 +49,7 @@ export default class Game {
                     }
 
                     // switch players
-                    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+                    this.currPlayer = this.currPlayer === this.p1 ? this.p2 : this.p1;
                 });
             }
         }
@@ -61,7 +68,7 @@ export default class Game {
     placeInTable(x, y) {
         const piece = document.createElement("div");
         piece.classList.add("piece");
-        piece.classList.add(`p${this.currPlayer}`);
+        piece.style.backgroundColor = this.currPlayer.color;
         piece.style.top = -50 * (x + 5);
 
         const spot = document.getElementById(`${x}-${y}`);
