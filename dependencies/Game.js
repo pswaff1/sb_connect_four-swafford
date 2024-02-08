@@ -6,10 +6,8 @@ export default class Game {
     constructor({width = 6, height = 7, player1color = '#ff0000', player2color='#0000ff'} = params) {
         this.width = width;
         this.height = height;
-        this.p1 = new Player(player1color);
-        console.log(this.p1.color);
-        this.p2 = new Player(player2color);        
-        this.currPlayer = this.p1;
+        this.players = [new Player(player1color), new Player(player2color)]        
+        this.currPlayer = this.players[0];
         this.board = new Board(this.width, this.height);
         this.attachListeners();
         this.isOver = false;
@@ -36,7 +34,8 @@ export default class Game {
 
                     // check for win
                     if (this.checkForWin()) {
-                        return this.endGame(`Player ${this.currPlayer} won!`);
+                        let winningPlayer = this.currPlayer === this.players[0] ? 1 : 2;
+                        return this.endGame(`Player ${winningPlayer} won!`);
                     }
 
                     // check for tie
@@ -49,7 +48,7 @@ export default class Game {
                     }
 
                     // switch players
-                    this.currPlayer = this.currPlayer === this.p1 ? this.p2 : this.p1;
+                    this.currPlayer = this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
                 });
             }
         }
